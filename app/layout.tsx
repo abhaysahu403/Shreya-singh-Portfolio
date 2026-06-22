@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { StarField } from "@/components/effects/StarField";
 import { AuroraBackground } from "@/components/effects/AuroraBackground";
 import { FloatingAIButton } from "@/components/layout/FloatingAIButton";
+import { HydrationFix } from "@/components/HydrationFix";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
@@ -35,7 +36,38 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  // Remove fdprocessedid attributes before React hydrates
+                  const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                      if (mutation.addedNodes.length) {
+                        mutation.addedNodes.forEach(function(node) {
+                          if (node.nodeType === 1 && node.hasAttribute && node.hasAttribute('fdprocessedid')) {
+                            node.removeAttribute('fdprocessedid');
+                          }
+                        });
+                      }
+                    });
+                  });
+                  observer.observe(document.documentElement, { 
+                    childList: true, 
+                    subtree: true,
+                    attributes: true,
+                    attributeFilter: ['fdprocessedid']
+                  });
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="antialiased" suppressHydrationWarning>
+        <HydrationFix />
         <ThemeProvider>
           <div className="relative min-h-screen">
             <AuroraBackground />
