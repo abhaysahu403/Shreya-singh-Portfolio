@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { StarField } from "@/components/effects/StarField";
 import { AuroraBackground } from "@/components/effects/AuroraBackground";
+import { FloatingAIButton } from "@/components/layout/FloatingAIButton";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
@@ -41,6 +42,7 @@ export default function RootLayout({
             <StarField />
             <Navbar />
             <main className="relative z-10">{children}</main>
+            <FloatingAIButton />
             <Toaster
               position="bottom-right"
               toastOptions={{
